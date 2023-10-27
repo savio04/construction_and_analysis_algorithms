@@ -4,17 +4,39 @@ def distance(first_point, second_point):
     (abs(first_point[1] -second_point[1]) ** 2)
   ) ** (1/2)
 
-def findMin(line, startIndex):
-  if(startIndex == len(line)):
-    return 0
-  
-  min_distance = line[startIndex]
+def prim(graph):
+  num_vertices = len(graph)
+  chave = [float('inf')] * num_vertices
+  pai = [None] * num_vertices
+  chave[0] = 0
+  conjunto_mst = [False] * num_vertices
 
-  for index in range(startIndex, len(line)):
-    if(line[index] < min_distance):
-      min_distance = line[index]
-  
-  return min_distance
+  pai[0] = -1
+
+  for _ in range(num_vertices):
+    u = min_chave(chave, conjunto_mst)
+    conjunto_mst[u] = True
+
+    for v in range(num_vertices):
+      if graph[u][v] and not conjunto_mst[v] and chave[v] > graph[u][v]:
+        chave[v] = graph[u][v]
+        pai[v] = u
+
+  sum = 0
+
+  for i in range(1, len(graph)):
+    sum += graph[i][pai[i]]
+
+  return f"{round(sum/100, 2)}" 
+
+def min_chave(chave, conjunto_mst):
+  minimo = float('inf')
+
+  for v in range(len(chave)):
+    if chave[v] < minimo and not conjunto_mst[v]:
+      minimo = chave[v]
+      minimo_indice = v
+  return minimo_indice
 
 output = ""
 
@@ -34,20 +56,18 @@ for _ in range(input_text):
 
   total_distance = 0
 
-  matrix = list()
+  graph = list()
+
   for first_index in range(len(coodinates)):
     line = list()
+
     for second_index in range(len(coodinates)):
       result_distance = distance(coodinates[first_index], coodinates[second_index])
       line.append(result_distance)
     
-    min_distance = findMin(line, first_index+1)
+    graph.append(line)
 
-    matrix.append(line)
-    total_distance += min_distance
+  result = prim(graph)
+  output += f"{result}\n"
 
-  print(matrix)
-  total_distance = total_distance/100
-  output += f"{round(total_distance, 2)}\n"
-
-print(output)
+print(output[:-1])
