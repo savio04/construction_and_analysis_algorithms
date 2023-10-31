@@ -7,7 +7,7 @@ def distance(first_point, second_point):
 
 # Prim
 def prim(adj, number):
-  #Aqui armazenamos os vertices que ainda não foram visitados
+  #Aqui armazenamos as arestas que ainda não foram visitados
   queue = []
 
   #Aqui armazenamos os vertices ja visitados
@@ -43,11 +43,11 @@ def prim(adj, number):
     for edge in adj[v]:
       new_v = edge[0]
 
-      # Caso ja seja um vertice que visitamos, pulamos para a proxima interação
+      # Caso essa aresta no ligue a um vertice que ja visitamos, pulamos para a proxima interação
       if visited[new_v]:
         continue
       
-      # Adicionamos o vertice e a distancia na lista de vertices ainda não visitados
+      # Adicionamos a lista de arestas ainda não visitados
       queue.append(edge)
 
   # Retornamos a soma divida por 100
