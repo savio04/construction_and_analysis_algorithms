@@ -5,12 +5,13 @@ def distance(first_point, second_point):
     (abs(first_point[1] -second_point[1]) ** 2)
   ) ** (1/2)
 
+#Função que verifica se aquela aresta não forma ciclo
 def find(parent, i): 
   if parent[i] != i: 
     parent[i] = find(parent, parent[i]) 
   return parent[i] 
   
-
+# Função que faz a união de dois conjuntos
 def union(parent, rank, x, y): 
   if rank[x] < rank[y]: 
     parent[x] = y 
@@ -20,9 +21,14 @@ def union(parent, rank, x, y):
     parent[y] = x 
     rank[x] += 1
 
-def KruskalMST(graph, V): 
+def KruskalMST(graph, V):
+  # Aqui armazenamos a arvore geradora minima
   result = [] 
+
+  # Indice para auxiliar nas interções
   i = 0
+
+  # Número de aresta que é atualizando a cada interação
   e = 0
 
   # Ordena o nosso grafo baseado nas menores arestas (distancias)
@@ -35,6 +41,7 @@ def KruskalMST(graph, V):
     parent.append(node) 
     rank.append(0) 
 
+  # Ficamos nesse laço equanto o número de arestas for menor que V-1 (número de vertices menos um)
   while e < V - 1: 
     u, v, w = graph[i]
     i = i + 1
