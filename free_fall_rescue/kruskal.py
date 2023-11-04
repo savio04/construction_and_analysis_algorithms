@@ -5,6 +5,54 @@ def distance(first_point, second_point):
     (abs(first_point[1] -second_point[1]) ** 2)
   ) ** (1/2)
 
+def find(parent, i): 
+  if parent[i] != i: 
+    parent[i] = find(parent, parent[i]) 
+  return parent[i] 
+  
+
+def union(parent, rank, x, y): 
+  if rank[x] < rank[y]: 
+    parent[x] = y 
+  elif rank[x] > rank[y]: 
+    parent[y] = x 
+  else: 
+    parent[y] = x 
+    rank[x] += 1
+
+def KruskalMST(graph, V): 
+  result = [] 
+  i = 0
+  e = 0
+
+  # Ordena o nosso grafo baseado nas menores arestas (distancias)
+  graph = sorted(graph, key=lambda item: item[2]) 
+
+  parent = [] 
+  rank = [] 
+
+  for node in range(V): 
+    parent.append(node) 
+    rank.append(0) 
+
+  while e < V - 1: 
+    u, v, w = graph[i]
+    i = i + 1
+    x = find(parent, u) 
+    y = find(parent, v) 
+
+    if x != y: 
+      e = e + 1
+      result.append([u, v, w]) 
+      union(parent, rank, x, y) 
+
+  sum = 0
+
+  for u, v, weight in result: 
+    sum += weight 
+
+  return f"{sum/100:.2f}"
+
 # Função com a logica principal
 def main():
   #Quantidade de testes
@@ -17,10 +65,13 @@ def main():
     # Quantidade de pessoas ou número de vertices
     amount_people = int(input())
 
-    #Armazena as coordenadas de cada pessoa
+    # Coordenadas das pessoas
     coordinates = list()
 
-    #Laço que pega a coordenada de cada pessoa e adiciona na lista "coordinates"
+    #Lista de adjacencia
+    graph = list()
+
+    #Laço que pega a coordenada de cada pessoa e adiciona na lista "coordinates" ja calculando a distancia entre as pessoas/vetices
     for _ in range(amount_people):
       input_coodinates = input().split(" ")
 
@@ -28,26 +79,20 @@ def main():
 
       coordinates.append((int(x), int(y)))
 
-    #Lista de adjacencia
-    adj = [[] for _ in range(amount_people)]
+      if(len(coordinates) > 1):
+        last_coordinate = coordinates[len(coordinates) - 1]
 
-    # Neste laço é preenchido a lista de adjacencias
-    for first_index in range(amount_people):
-      for second_index in range(amount_people):
+        for index in range(len(coordinates) - 1):
+          result_distance = distance(coordinates[index], last_coordinate)
+          graph.append((index, len(coordinates) - 1, result_distance))
 
-        # Aqui calculamos a distancia do vertice analisado(first_index) em relação aos demais (second_index)
-        if(first_index != second_index):
-          result_distance = distance(coordinates[first_index], coordinates[second_index])
-          adj[first_index].append((second_index, result_distance))
-    
-    print("adj", adj)
-    #Chama o prim passado a lista de adjacencia e o numero de pessoas/vertices
-    # result = prim(adj, amount_people)
+    result = KruskalMST(graph, amount_people)
 
     #Armazena o resultado final
-    # output += f"{result}\n"
+    output += f"{result}\n"
 
-  # print(output[:-1])
+  #Imprime o resultado
+  print(output[:-1])
 
 # Chamamos a função main
 main()
